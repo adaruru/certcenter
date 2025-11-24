@@ -1,5 +1,5 @@
 services:
-  its-certcenter:
+  certcenter:
     image: 192.168.100.63:5000/its-certcenter
     container_name: its-certcenter
     ports:

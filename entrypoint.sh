@@ -47,4 +47,7 @@ else
   fi
 fi
 
+# 啟動 cron
+cron
+# 啟動 certcenter 應用程式
 exec /app/certcenter

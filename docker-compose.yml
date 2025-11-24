@@ -1,7 +1,7 @@
 services:
-  its-certcenter:
-    image: its-certcenter:test
-    container_name: its-certcenter
+  certcenter:
+    image: certcenter:test
+    container_name: certcenter
     ports:
     - "9250:9250"
     environment:
