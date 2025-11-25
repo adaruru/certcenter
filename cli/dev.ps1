@@ -34,15 +34,17 @@ function Test63RenewCertCenter {
 
 function LocalTestRenewCertCenter {
     Write-Host "LocalTestRenewCertCenter"
-    backToDefault
+    createAndUse63
     docker exec -it its-certcenter /bin/bash
-    Write-Host "看 cron 任務有沒有跑起來"
-    crontab -l
-    Write-Host "看 cron 進程有沒有跑起來"
-    which cron
-    which crond
-    ps -ef | grep cron
-    Write-Host ""
-    grep -a "/usr/sbin/cron" /proc/*/cmdline 2>/dev/null
+    # 看 cron 任務有沒有跑起來
+    # crontab -l
+    # 看 cron 進程有沒有跑起來
+    # which cron
+    # which crond
+    # ps -ef | grep cron
+    # if pid=$(cat /var/run/crond.pid 2>/dev/null) && [ "$(cat /proc/$pid/comm 2>/dev/null)" = "cron" ]; then echo "cron running (pid=$pid)"; else echo "cron not running"; fi
+
+    # cat /var/run/crond.pid && cat /proc/423/comm
+    # cat /var/log/acme-cron.log
 }
 

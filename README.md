@@ -1,30 +1,88 @@
-### project build
-``` shell
-# 專案目錄（certcenter/）初始化
-go mod init certcenter
-# go 執行
+﻿# certcenter
+
+集中式 ACME DNS-01 自動化服務，透過 acme.sh + acme-dns 代理 TXT Challenge，批次簽發/續簽 wildcard 憑證並提供 API 查詢健康狀態。
+
+## 特色
+- acme-dns 代管 TXT Challenge，驗證紀錄寫入 `/certcenter/<domain>/`
+- 自動簽發/續簽 wildcard 憑證，輸出 `fullchain.cer`、`certcenter.key`、`ca.cer`
+- `/tips` 提供環境設定指引，`/health` 回報 OK/WARN/ERROR
+
+## 快速開始
+### 本機執行 Go
+```shell
 go run ./cmd/server
-# go 建置
+# 或先編譯後再執行
 go build -o certcenter ./cmd/server
+./certcenter
 ```
 
-### docker build
-
-``` shell
- docker build -t its-certcenter:test .
+### Docker 建置/執行
+```shell
+docker build -t certcenter:test .
+docker run -d --name certcenter -p 9250:9250 \
+  -e ACME_ACCOUNT=you@example.com \
+  -e ACME_DNS_API=https://auth.acme-dns.io/register \
+  -v $(pwd)/data:/certcenter \
+  certcenter:test
 ```
 
-查詢當前 fqdn
+### docker-compose
+專案已附 `docker-compose.yml` 範例，依需求調整環境變數與 volume 後即可 `docker-compose up -d`。
+
+## 環境需求
+- Go 版本：`go 1.24.3`（見 `go.mod`）
+- 系統工具：`zip`、`openssl`（Dockerfile 已安裝）
+- 需能連線至 acme-dns 註冊 API（預設 `https://auth.acme-dns.io/register`）
+
+## 必填環境變數
+- `ACME_ACCOUNT`：ACME 帳號 email，entrypoint 會寫入 acme.sh
+- `ACME_DNS_API`：acme-dns 註冊 API
+- `FQDN`：`/tips` 會提示要設定的 acme-dns CNAME
+
+## 資料與檔案
+- `/certcenter/register.json`：啟動時向 acme-dns 註冊取得的 username/password/subdomain/fulldomain
+- `/certcenter/<domain>/`：存放該域名的憑證檔（`fullchain.cer`、`certcenter.key`、`ca.cer`）
+
+## 作業流程範例
+1. 啟動服務（本機或 Docker）。
+2. `GET /tips` 取得需設定的 CNAME/FQDN。
+3. 於 DNS 設定 acme-dns 提示的 CNAME。
+4. `POST /cert?domain=*.example.com` 觸發簽發。
+5. `GET /cert?domain=*.example.com` 下載 `live.zip`（含 fullchain/key/ca）。
+6. `GET /health?domain=*.example.com` 監看憑證狀態；`GET /expire?domain=*.example.com` 查剩餘天數。
+7. 續簽：`POST /renew`（全部）或 `POST /renew?domain=*.example.com`（指定）。
+
+## API
+- `GET /tips`：列出環境變數、CNAME 設定提示
+- `GET /register`：回傳 acme-dns 帳號資訊
+- `POST /cert?domain=*.example.com`：簽發憑證
+- `GET /cert?domain=*.example.com`：下載 `live.zip`
+- `GET /expire?domain=*.example.com`：取得到期時間（RFC3339）
+- `GET /health?domain=*.example.com`：回傳 OK/WARN/ERROR
+- `POST /renew`：續簽全部已簽發域名
+- `POST /renew?domain=*.example.com`：續簽指定域名
+
+## 常用 cURL
+```shell
+
+# 查詢當前 fqdn
 curl http://localhost:9250/register
-
-發行憑證
+# 發行憑證
 curl -X POST "http://localhost:9250/cert?domain=*.itsower.com.tw"
-
-下載憑證
+# 下載憑證
 curl -OJ "http://localhost:9250/cert?domain=*.itsower.com.tw"
-
-檢查到期日
+# 檢查到期日
 curl "http://localhost:9250/expire?domain=*.itsower.com.tw"
-
-檢查健康狀態
+# 檢查健康狀態
 curl "http://localhost:9250/health?domain=*.itsower.com.tw"
+```
+
+## 憑證同步排程
+`etc/cert-sync.sh`：預設每日 03:00 檢查各域名狀態，若為 OK/WARN 則下載 `live.zip` 展開至 `TARGET_DIR`；記得填入 `DOMAIN`、API URL、`TARGET_DIR` 後再寫入 crontab：
+```cron
+0 3 * * * /bin/bash /etc/cert-sync.sh >> /var/log/cert-sync.log 2>&1
+```
+
+## 開發資訊
+- HTTP 預設監聽 `:9250`（見 `cmd/server/main.go`）
+- Dockerfile 已包含必要工具，若本機執行請先安裝 `zip`、`openssl`

@@ -47,7 +47,14 @@ else
   fi
 fi
 
-# 啟動 cron
-cron
+# cron
+# 新增 renew 並移除元本的
+# * * * * * "/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh" >> /var/log/acme-cron.log 2>&1
+
+# 讓 crontab 自己重寫正確權限
+# crontab -l | crontab -
+# 確認應該變成 -rw------- root crontab
+# ls -l /var/spool/cron/crontabs/root
+
 # 啟動 certcenter 應用程式
 exec /app/certcenter
