@@ -38,19 +38,20 @@ docker run -d --name certcenter -p 9250:9250 \
 - `ACME_ACCOUNT`：ACME 帳號 email，entrypoint 會寫入 acme.sh
 - `ACME_DNS_API`：acme-dns 註冊 API
 - `FQDN`：`/tips` 會提示要設定的 acme-dns CNAME
+- `REG_DN_SET`：`/tips` 預設操作的網域集合，未提供時預設 `*.itsower.com.tw`
 
 ## 資料與檔案
 - `/certcenter/register.json`：啟動時向 acme-dns 註冊取得的 username/password/subdomain/fulldomain
 - `/certcenter/<domain>/`：存放該域名的憑證檔（`fullchain.cer`、`certcenter.key`、`ca.cer`）
 
 ## 作業流程範例
-1. 啟動服務（本機或 Docker）。
-2. `GET /tips` 取得需設定的 CNAME/FQDN。
-3. 於 DNS 設定 acme-dns 提示的 CNAME。
-4. `POST /cert?domain=*.example.com` 觸發簽發。
-5. `GET /cert?domain=*.example.com` 下載 `live.zip`（含 fullchain/key/ca）。
-6. `GET /health?domain=*.example.com` 監看憑證狀態；`GET /expire?domain=*.example.com` 查剩餘天數。
-7. 續簽：`POST /renew`（全部）或 `POST /renew?domain=*.example.com`（指定）。
+- 啟動服務（本機或 Docker）。
+- `GET /tips` 取得需設定的 CNAME/FQDN。
+- 於 DNS 設定 acme-dns 提示的 CNAME。
+- `POST /cert?domain=*.example.com` 觸發簽發。
+- `GET /cert?domain=*.example.com` 下載 `live.zip`（含 fullchain/key/ca）。
+- `GET /health?domain=*.example.com` 監看憑證狀態；`GET /expire?domain=*.example.com` 查剩餘天數。
+- 續簽：`POST /renew`（全部）或 `POST /renew?domain=*.example.com`（指定）。
 
 ## API
 - `GET /tips`：列出環境變數、CNAME 設定提示
@@ -76,6 +77,26 @@ curl "http://localhost:9250/expire?domain=*.itsower.com.tw"
 # 檢查健康狀態
 curl "http://localhost:9250/health?domain=*.itsower.com.tw"
 ```
+
+## 無法註冊 ACME 帳戶
+  - 帳戶長期使用
+       - acme.sh 的帳戶是全局、長期使用的
+       - acme.sh 帳戶金鑰在首次註冊後應長期保存並使用
+       - 更換等於重註冊，會影響後續續期與 LE 配額
+       - 把它鎖在部署環境變數可避免 UI 被誤用或濫用（防止隨意換帳、撞到 LE rate limit）。
+  - 金鑰綁定 server
+       - 啟動就執行 acme.sh --set-default-ca ... 與 acme.sh --register-account -m "$ACME_ACCOUNT" (entrypoint.sh 第 12–13 行)
+       - 這一步需要 email，且只會在初次啟動時建立帳戶金鑰並寫入 /root/.acme.sh/
+       - 這個金鑰，在 server 只有一筆，所有 ACME 操作(憑證簽發、續期、撤銷等)都依賴此金鑰進行身份驗證。
+       - acme 帳號、server、金鑰、acme.sh 是深度綁定的關係，跨 server 驗證會需要額外步驟( 匯出核心檔案 private_key.json )
+       - 因此必須在 compose 階段就提供 ACME_ACCOUNT。
+
+  - UI（pages/tips.html）
+       -  register API 只是讀取 register.json（acme-dns 的註冊資訊），回傳 username/password/fulldomain，並沒有能力向 Let’s Encrypt 註冊 ACME 帳戶。
+       - UI 設計上是給使用者依`既定帳戶`來申請/續期，不是開放帳號設定。
+       - 既定帳戶，意指 compose 階段就提供的 ACME_ACCOUNT，UI 不提供修改
+
+總結：ACME 帳戶層級屬於「系統部署設定」，與使用者的單一網域操作（issue/renew）不同；在 compose 時固定它，啟動就能完成一次性的帳戶註冊，避免在 UI 端提供高風險的帳戶管理入口。
 
 ## 憑證自動更新
 
