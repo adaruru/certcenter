@@ -18,10 +18,10 @@
   <table>
     <tr><th>步驟</th><th>指令</th></tr>
     <tr>
-      <td>regDnSet</td>
+      <td>輸入你即將要申請的憑證網域</td>
       <td>
         <input id="regDnSet" type="text" value="{{.RegDnSet}}" style="width:280px">
-        <small>Editable; used in all commands below</small>
+        <br><small>修改此值，下面所有命令中的網域會同步變更</small>
       </td>
     </tr>
     <tr>
@@ -35,24 +35,24 @@
     </tr>
     <tr>
       <td>2. 憑證發行</td>
-      <td><code>curl -X POST "{{.BaseURL}}/cert?domain={{.RegDnSet}}"</code></td>
+      <td><code>curl -X POST "{{.BaseURL}}/cert?domain=<span class="reg-val">{{.RegDnSet}}</span>"</code></td>
     </tr>
     <tr>
       <td>3. 憑證下載</td>
-      <td><code>curl -OJ "{{.BaseURL}}/cert?domain={{.RegDnSet}}"</code></td>
+      <td><code>curl -OJ "{{.BaseURL}}/cert?domain=<span class="reg-val">{{.RegDnSet}}</span>"</code></td>
     </tr>
     <tr>
       <td>4. 憑證狀態</td>
-      <td><code>curl "{{.BaseURL}}/health?domain={{.RegDnSet}}"</code><br>
+      <td><code>curl "{{.BaseURL}}/health?domain=<span class="reg-val">{{.RegDnSet}}</span>"</code><br>
           用於判斷是否可以下載憑證 (status: OK &gt;30天 / WARN ≤30天 / ERROR 已過期)</td>
     </tr>
     <tr>
       <td>5. 檢查到期</td>
-      <td><code>curl "{{.BaseURL}}/expire?domain={{.RegDnSet}}"</code></td>
+      <td><code>curl "{{.BaseURL}}/expire?domain=<span class="reg-val">{{.RegDnSet}}</span>"</code></td>
     </tr>
     <tr>
       <td>6. 憑證更新特定憑證</td>
-      <td><code>curl -X POST "{{.BaseURL}}/renew?domain={{.RegDnSet}}"</code><br>
+      <td><code>curl -X POST "{{.BaseURL}}/renew?domain=<span class="reg-val">{{.RegDnSet}}</span>"</code><br>
           續期後需重新下載憑證</td>
     </tr>
     <tr>
@@ -61,5 +61,18 @@
           憑證中心 --force 更新所有憑證，需搭配 3. 重新下載憑證</td>
     </tr>
   </table>
+  <script>
+    (() => {
+      const input = document.getElementById('regDnSet');
+      const nodes = document.querySelectorAll('.reg-val');
+      const initial = input.value;
+      const render = () => {
+        const v = (input.value || initial).trim();
+        nodes.forEach(n => n.textContent = v);
+      };
+      input.addEventListener('input', render);
+      render();
+    })();
+  </script>
 </body>
 </html>
