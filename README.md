@@ -79,6 +79,9 @@ curl "http://localhost:9250/health?domain=*.itsower.com.tw"
 ```
 
 ## 無法註冊 ACME 帳戶
+
+ACME 帳戶層級屬於「系統部署設定」，與使用者的單一網域操作（issue/renew）不同，在 compose 時固定它，啟動就能完成一次性的帳戶註冊，避免在 UI 端提供高風險的帳戶管理入口。
+
   - 帳戶長期使用
        - acme.sh 的帳戶是全局、長期使用的
        - acme.sh 帳戶金鑰在首次註冊後應長期保存並使用
@@ -90,13 +93,10 @@ curl "http://localhost:9250/health?domain=*.itsower.com.tw"
        - 這個金鑰，在 server 只有一筆，所有 ACME 操作(憑證簽發、續期、撤銷等)都依賴此金鑰進行身份驗證。
        - acme 帳號、server、金鑰、acme.sh 是深度綁定的關係，跨 server 驗證會需要額外步驟( 匯出核心檔案 private_key.json )
        - 因此必須在 compose 階段就提供 ACME_ACCOUNT。
-
   - UI（pages/tips.html）
        -  register API 只是讀取 register.json（acme-dns 的註冊資訊），回傳 username/password/fulldomain，並沒有能力向 Let’s Encrypt 註冊 ACME 帳戶。
        - UI 設計上是給使用者依`既定帳戶`來申請/續期，不是開放帳號設定。
        - 既定帳戶，意指 compose 階段就提供的 ACME_ACCOUNT，UI 不提供修改
-
-總結：ACME 帳戶層級屬於「系統部署設定」，與使用者的單一網域操作（issue/renew）不同；在 compose 時固定它，啟動就能完成一次性的帳戶註冊，避免在 UI 端提供高風險的帳戶管理入口。
 
 ## 憑證自動更新
 
