@@ -233,12 +233,17 @@ func handleRenew(w http.ResponseWriter, r *http.Request) {
 type TipsData struct {
 	FQDN        string
 	ACMEAccount string
+	RegDnSet    string
 }
 
 // 讀取註冊資訊自環境變數
 func handleTips(w http.ResponseWriter, r *http.Request) {
 	fulldomain := os.Getenv("FQDN")
 	acct := os.Getenv("ACME_ACCOUNT")
+	regDnSet := os.Getenv("REG_DN_SET")
+	if regDnSet == "" {
+		regDnSet = "*.Template.com.tw"
+	}
 
 	if fulldomain == "" || acct == "" {
 		http.Error(w, "required environment variables FQDN or ACME_ACCOUNT not found", 500)
@@ -255,6 +260,7 @@ func handleTips(w http.ResponseWriter, r *http.Request) {
 	data := map[string]string{
 		"FQDN":         fulldomain,
 		"ACME_ACCOUNT": acct,
+		"RegDnSet":     regDnSet,
 		"BaseURL":      baseURL,
 	}
 
