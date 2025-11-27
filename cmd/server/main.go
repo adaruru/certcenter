@@ -282,7 +282,13 @@ func main() {
 	http.HandleFunc("/expire", handleExpire)
 	http.HandleFunc("/renew", handleRenew)
 	http.HandleFunc("/health", handleHealth)
-
+	http.HandleFunc("/certcenter.ico", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "pages/certcenter.ico")
+	})
+	// 靜態檔案：/public/* 對應到 pages 目錄底下的檔案
+	// fs := http.FileServer(http.Dir("pages"))
+	// http.Handle("/public/", http.StripPrefix("/public/", fs))
+	
 	fmt.Println("[certcenter] Server started at :9250")
 	http.ListenAndServe(":9250", nil)
 }
