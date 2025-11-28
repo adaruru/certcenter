@@ -21,17 +21,23 @@
       width: 100%;
       background: #fff;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      table-layout: fixed;
     }
 
-    th,
-    td {
+    th, td {
       padding: 12px 15px;
       border-bottom: 1px solid #ddd;
+      vertical-align: top;
     }
 
     th {
       background: #f0f0f0;
       text-align: left;
+    }
+
+    th:first-child, td:first-child {
+      width: 40%;
+      max-width: 40vw;
     }
 
     tr:hover {
@@ -96,16 +102,23 @@
         <button id="btnIssue" type="button">執行</button>
         <span id="issueResult" class="resultSpan"></span>
       </td>
-      <td><code>curl -X POST "{{.BaseURL}}/cert?domain=<span class="reg-val">{{.RegDnSet}}</span>"</code></td>
+      <td>
+        <code>curl -X POST "{{.BaseURL}}/cert?domain=<span class="reg-val">{{.RegDnSet}}</span>"</code><br>
+        請在 0.FQDN 步驟之後，確保 DNS 設定完成後再執行
+      </td>
     </tr>
     <tr>
       <td>3. 憑證下載</td>
-      <td><code>curl -OJ "{{.BaseURL}}/cert?domain=<span class="reg-val">{{.RegDnSet}}</span>"</code></td>
+      <td>
+        <code>curl -OJ "{{.BaseURL}}/cert?domain=<span class="reg-val">{{.RegDnSet}}</span>"</code>
+      </td>
     </tr>
     <tr>
       <td>4. 憑證狀態</td>
-      <td><code>curl "{{.BaseURL}}/health?domain=<span class="reg-val">{{.RegDnSet}}</span>"</code><br>
-        用於判斷是否可以下載憑證 (status: OK &gt;30天 / WARN ≤30天 / ERROR 已過期)</td>
+      <td>
+        <code>curl "{{.BaseURL}}/health?domain=<span class="reg-val">{{.RegDnSet}}</span>"</code><br>
+        用於判斷是否可以下載憑證 (status: OK &gt;30天 / WARN ≤30天 / ERROR 已過期)
+      </td>
     </tr>
     <tr>
       <td>
@@ -113,7 +126,9 @@
         <button id="btnExpire" type="button">執行</button>
         <span id="expireResult" class="resultSpan"></span>
       </td>
-      <td><code>curl "{{.BaseURL}}/expire?domain=<span class="reg-val">{{.RegDnSet}}</span>"</code></td>
+      <td>
+        <code>curl "{{.BaseURL}}/expire?domain=<span class="reg-val">{{.RegDnSet}}</span>"</code>
+      </td>
     </tr>
     <tr>
       <td>6. 憑證更新特定憑證</td>
@@ -209,3 +224,7 @@
 </body>
 
 </html>
+
+
+
+
