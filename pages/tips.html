@@ -1,25 +1,74 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
   <meta charset="UTF-8">
   <title>憑證服務操作說明</title>
   <link rel="icon" href="./public/certcenter.ico" type="image/x-icon">
   <style>
-    body { font-family: Arial, sans-serif; margin: 30px; background: #f7f9fb; }
-    h1 { color: #333; }
-    table { border-collapse: collapse; width: 100%; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
-    th, td { padding: 12px 15px; border-bottom: 1px solid #ddd; }
-    th { background: #f0f0f0; text-align: left; }
-    tr:hover { background: #f9f9f9; }
-    code { background: #eee; padding: 2px 6px; border-radius: 4px; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background: #f7f9fb;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background: #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    th,
+    td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background: #f0f0f0;
+      text-align: left;
+    }
+
+    tr:hover {
+      background: #f9f9f9;
+    }
+
+    code {
+      background: #eee;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    button {
+      margin-top: 6px;
+      padding: 6px 12px;
+    }
+
+    .resultSpan {
+      margin-left: 8px;
+      color: #333;
+    }
   </style>
 </head>
+
 <body>
   <h1>憑證服務操作說明</h1>
+  <div id="baseURL" style="display:none">{{.BaseURL}}</div>
   <table>
-    <tr><th>步驟</th><th>指令</th></tr>
     <tr>
-      <td>輸入你即將要申請的憑證網域</td>
+      <th>步驟</th>
+      <th>指令</th>
+    </tr>
+    <tr>
+      <td>
+        輸入你即將要申請的憑證網域
+        <button id="cleanResult" type="button">清空所有結果</button>
+      </td>
       <td>
         <input id="regDnSet" type="text" value="{{.RegDnSet}}" style="width:280px">
         <br><small>修改此值，下面所有命令中的網域會同步變更</small>
@@ -27,15 +76,26 @@
     </tr>
     <tr>
       <td>0. FQDN</td>
-      <td><code>Azure DNS zones Recordsets: add a CNAME record '_acme-challenge.&lt;your-domain&gt;' Alias {{.FQDN}}</code></td>
+      <td>
+        Azure DNS zones Recordsets: add a CNAME record '_acme-challenge.&lt;your-domain&gt;' Alias {{.FQDN}}
+      </td>
     </tr>
     <tr>
-      <td>1. 帳號檢查</td>
-      <td><code>curl "{{.BaseURL}}/register?account={{.ACME_ACCOUNT}}"</code>
-        <br>容器執行在 compose 階段決定註冊帳號，所以只能帳號檢查，不能註冊</td>
+      <td style="max-width: 50%;">1. 帳號檢查: {{.ACME_ACCOUNT}}<br>
+        <button id="btnCheckReg" type="button">執行</button>
+        <span id="checkResult" class="resultSpan"></span>
+      </td>
+      <td>
+        <code>curl "{{.BaseURL}}/register"</code>
+        <br>容器執行在 compose 階段決定註冊帳號，所以只能帳號檢查，不能註冊
+      </td>
     </tr>
     <tr>
-      <td>2. 憑證發行</td>
+      <td>
+        2. 憑證發行<br>
+        <button id="btnIssue" type="button">執行</button>
+        <span id="issueResult" class="resultSpan"></span>
+      </td>
       <td><code>curl -X POST "{{.BaseURL}}/cert?domain=<span class="reg-val">{{.RegDnSet}}</span>"</code></td>
     </tr>
     <tr>
@@ -45,23 +105,29 @@
     <tr>
       <td>4. 憑證狀態</td>
       <td><code>curl "{{.BaseURL}}/health?domain=<span class="reg-val">{{.RegDnSet}}</span>"</code><br>
-          用於判斷是否可以下載憑證 (status: OK &gt;30天 / WARN ≤30天 / ERROR 已過期)</td>
+        用於判斷是否可以下載憑證 (status: OK &gt;30天 / WARN ≤30天 / ERROR 已過期)</td>
     </tr>
     <tr>
-      <td>5. 檢查到期</td>
+      <td>
+        5. 檢查到期<br>
+        <button id="btnExpire" type="button">執行</button>
+        <span id="expireResult" class="resultSpan"></span>
+      </td>
       <td><code>curl "{{.BaseURL}}/expire?domain=<span class="reg-val">{{.RegDnSet}}</span>"</code></td>
     </tr>
     <tr>
       <td>6. 憑證更新特定憑證</td>
       <td><code>curl -X POST "{{.BaseURL}}/renew?domain=<span class="reg-val">{{.RegDnSet}}</span>"</code><br>
-          續期後需重新下載憑證</td>
+        續期後需重新下載憑證</td>
     </tr>
     <tr>
       <td>7. 憑證更新所有憑證</td>
-      <td><code>curl -X POST "{{.BaseURL}}/renew"</code><br>
-          憑證中心 --force 更新所有憑證，需搭配 3. 重新下載憑證</td>
+      <td><code>curl -X POST "{{.BaseURL}}/renew"</code>
+        <br>憑證中心 --force 更新所有憑證，需搭配 3. 重新下載憑證
+      </td>
     </tr>
   </table>
+
   <script>
     (() => {
       const input = document.getElementById('regDnSet');
@@ -73,7 +139,73 @@
       };
       input.addEventListener('input', render);
       render();
+
+      const btnExpire = document.getElementById('btnExpire');
+      const expireResult = document.getElementById('expireResult');
+      const baseURL = document.getElementById('baseURL').textContent.trim();
+
+      btnExpire.addEventListener('click', async () => {
+        const domain = (input.value || initial).trim();
+        if (!domain) {
+          expireResult.textContent = '請先輸入網域';
+          return;
+        }
+        expireResult.textContent = '檢查中...';
+        try {
+          const resp = await fetch(`${baseURL}/expire?domain=${encodeURIComponent(domain)}`);
+          const text = await resp.text();
+          expireResult.textContent = text;
+        } catch (err) {
+          expireResult.textContent = '檢查失敗';
+        }
+      });
+
+      const btnCheckReg = document.getElementById('btnCheckReg');
+      const checkResult = document.getElementById('checkResult');
+      btnCheckReg.addEventListener('click', async () => {
+        checkResult.textContent = '檢查中...';
+        try {
+          const resp = await fetch(`${baseURL}/register`);
+          const text = await resp.text();
+          checkResult.textContent = text;
+        } catch (err) {
+          checkResult.textContent = '檢查失敗';
+        }
+      });
+
+      const btnIssue = document.getElementById('btnIssue');
+      const issueResult = document.getElementById('issueResult');
+      btnIssue.addEventListener('click', async () => {
+        const domain = (input.value || initial).trim();
+        if (!domain) {
+          issueResult.textContent = '請先輸入網域';
+          return;
+        }
+        issueResult.textContent = '發行中...';
+        try {
+          const resp = await fetch(`${baseURL}/cert?domain=${encodeURIComponent(domain)}`, {
+            method: 'POST'
+          });
+          const text = await resp.text();
+          issueResult.textContent = text;
+        } catch (err) {
+          issueResult.textContent = '發行失敗';
+        }
+      });
+
+      const cleanResult = document.getElementById('cleanResult');
+      cleanResult.addEventListener('click', () => {
+        const allTexts = document.querySelectorAll('.resultSpan');
+        allTexts.forEach(t => t.textContent = '');
+      });
+
+
+
+
+
+
     })();
   </script>
 </body>
+
 </html>

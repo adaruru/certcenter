@@ -155,7 +155,7 @@ func handleExpire(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command("openssl", "x509", "-enddate", "-noout", "-in", certFile)
 	out, err := cmd.Output()
 	if err != nil {
-		http.Error(w, "cannot read cert", 500)
+		http.Error(w, "cannot read cert 請先執行第一步", 500)
 		return
 	}
 	parts := strings.Split(strings.TrimSpace(string(out)), "=")
