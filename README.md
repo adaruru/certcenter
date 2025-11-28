@@ -38,7 +38,7 @@ docker run -d --name certcenter -p 9250:9250 \
 - `ACME_ACCOUNT`：ACME 帳號 email，entrypoint 會寫入 acme.sh
 - `ACME_DNS_API`：acme-dns 註冊 API
 - `FQDN`：`/tips` 會提示要設定的 acme-dns CNAME
-- `REG_DN_SET`：`/tips` 預設操作的網域集合，未提供時預設 `*.itsower.com.tw`
+- `REG_DN_SET`：`/tips` 預設操作的網域集合，未提供時預設 `*.Template.com.tw`
 
 ## 資料與檔案
 - `/certcenter/register.json`：啟動時向 acme-dns 註冊取得的 username/password/subdomain/fulldomain
@@ -63,19 +63,19 @@ docker run -d --name certcenter -p 9250:9250 \
 - `POST /renew`：續簽全部已簽發域名
 - `POST /renew?domain=*.example.com`：續簽指定域名
 
-## 常用 cURL
+## API curl 實例
 ```shell
 
 # 查詢當前 fqdn
 curl http://localhost:9250/register
 # 發行憑證
-curl -X POST "http://localhost:9250/cert?domain=*.itsower.com.tw"
+curl -X POST "http://localhost:9250/cert?domain=*.Template.com.tw"
 # 下載憑證
-curl -OJ "http://localhost:9250/cert?domain=*.itsower.com.tw"
+curl -OJ "http://localhost:9250/cert?domain=*.Template.com.tw"
 # 檢查到期日
-curl "http://localhost:9250/expire?domain=*.itsower.com.tw"
+curl "http://localhost:9250/expire?domain=*.Template.com.tw"
 # 檢查健康狀態
-curl "http://localhost:9250/health?domain=*.itsower.com.tw"
+curl "http://localhost:9250/health?domain=*.Template.com.tw"
 ```
 
 ## 無法註冊 ACME 帳戶
