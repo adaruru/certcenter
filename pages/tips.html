@@ -36,7 +36,7 @@
     }
 
     th:first-child, td:first-child {
-      width: 40%;
+      width: 25%;
       max-width: 40vw;
     }
 
@@ -87,8 +87,8 @@
       </td>
     </tr>
     <tr>
-      <td style="max-width: 50%;">1. 帳號檢查: {{.ACME_ACCOUNT}}<br>
-        <button id="btnCheckReg" type="button">執行</button>
+      <td>1. 帳號檢查: {{.ACME_ACCOUNT}}
+        <button id="btnCheckReg" type="button">執行</button><br>
         <span id="checkResult" class="resultSpan"></span>
       </td>
       <td>
@@ -98,8 +98,7 @@
     </tr>
     <tr>
       <td>
-        2. 憑證發行<br>
-        <button id="btnIssue" type="button">執行</button>
+        2. 憑證發行<button id="btnIssue" type="button">執行</button><br>
         <span id="issueResult" class="resultSpan"></span>
       </td>
       <td>
@@ -122,8 +121,7 @@
     </tr>
     <tr>
       <td>
-        5. 檢查到期<br>
-        <button id="btnExpire" type="button">執行</button>
+        5. 檢查到期<button id="btnExpire" type="button">執行</button><br>
         <span id="expireResult" class="resultSpan"></span>
       </td>
       <td>

@@ -284,7 +284,7 @@ func main() {
 	http.HandleFunc("/health", handleHealth)
 
 	//靜態檔案：/public/* 對應到 pages 目錄底下的檔案
-	fs := http.FileServer(http.Dir("pages"))
+	fs := http.FileServer(http.Dir("pages/public"))
 	http.Handle("/public/", http.StripPrefix("/public/", fs))
 
 	fmt.Println("[certcenter] Server started at :9250")
