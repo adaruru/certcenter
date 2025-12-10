@@ -12,7 +12,7 @@ services:
     - certcenter-data:/certcenter # 持久化儲存憑證和 acme-dns 註冊資訊
     - acme-data:/root/.acme.sh # 持久化儲存 ACME 帳戶金鑰和配置
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9250/register" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:9250/acmeRegInfo" ]
       interval: 30s
       timeout: 10s
       retries: 3

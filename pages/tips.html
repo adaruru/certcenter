@@ -14,7 +14,7 @@
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #a8d8ff 0%, #bde4ff 100%);
+      background: linear-gradient(135deg, #d8b4fe 0%, #e9d5ff 100%);
       min-height: 100vh;
       padding: 40px 20px;
     }
@@ -258,7 +258,7 @@
         <span id="checkResult" class="resultSpan"></span>
       </td>
       <td>
-        <code>curl "{{.BaseURL}}/register"</code>
+        <code>curl "{{.BaseURL}}/acmeRegInfo"</code>
         <br>容器執行在 compose 階段決定註冊帳號，所以只能帳號檢查，不能註冊
       </td>
     </tr>
@@ -346,7 +346,7 @@
       btnCheckReg.addEventListener('click', async () => {
         checkResult.textContent = '檢查中...';
         try {
-          const resp = await fetch(`${baseURL}/register`);
+          const resp = await fetch(`${baseURL}/acmeRegInfo`);
           const text = await resp.text();
           checkResult.textContent = text;
         } catch (err) {

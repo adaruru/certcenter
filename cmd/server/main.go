@@ -271,7 +271,7 @@ func handleTips(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/tips", handleTips)
 	http.HandleFunc("/", handleTips)
-	http.HandleFunc("/register", handleRegister)
+	http.HandleFunc("/acmeRegInfo", handleRegister)
 	http.HandleFunc("/cert", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {
 			handleIssue(w, r)

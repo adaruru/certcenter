@@ -8,7 +8,7 @@ function devCertcenter {
 function TestCertCenter {
     $url= "http://localhost:9250"
     Write-Host "now test $url"
-    curl $url/register
+    curl $url/acmeRegInfo
 }
 
 function TestIssueCertCenter {

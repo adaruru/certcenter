@@ -55,7 +55,7 @@ docker run -d --name certcenter -p 9250:9250 \
 
 ## API
 - `GET /tips`：列出環境變數、CNAME 設定提示
-- `GET /register`：回傳 acme-dns 帳號資訊
+- `GET /acmeRegInfo`：回傳 acme-dns 帳號資訊
 - `POST /cert?domain=*.example.com`：簽發憑證
 - `GET /cert?domain=*.example.com`：下載 `live.zip`
 - `GET /expire?domain=*.example.com`：取得到期時間（RFC3339）
@@ -67,7 +67,7 @@ docker run -d --name certcenter -p 9250:9250 \
 ```shell
 
 # 查詢當前 fqdn
-curl http://localhost:9250/register
+curl http://localhost:9250/acmeRegInfo
 # 發行憑證
 curl -X POST "http://localhost:9250/cert?domain=*.Template.com.tw"
 # 下載憑證

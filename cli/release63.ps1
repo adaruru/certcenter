@@ -10,7 +10,7 @@ function releaseIts-certcenter {
 function Test63CertCenter {
     $url= "http://192.168.100.63:9250"
     Write-Host "now test $url"
-    curl $url/register
+    curl $url/acmeRegInfo
 }
 
 function Test63IssueCertCenter {
