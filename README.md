@@ -29,7 +29,14 @@ docker run -d --name certcenter -p 9250:9250 \
 ### docker-compose
 專案已附 `docker-compose.yml` 範例，依需求調整環境變數與 volume 後即可 `docker-compose up -d`。
 
+### 維護用 UI
+
+本地測試 http://localhost:9250/
+
+![image-20251210162157586](.attach/.README/image-20251210162157586.png)
+
 ## 環境需求
+
 - Go 版本：`go 1.24.3`（見 `go.mod`）
 - 系統工具：`zip`、`openssl`（Dockerfile 已安裝）
 - 需能連線至 acme-dns 註冊 API（預設 `https://auth.acme-dns.io/register`）

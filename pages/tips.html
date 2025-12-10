@@ -14,7 +14,7 @@
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f4f0ff 0%, #e9d5ff 100%);
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
       min-height: 100vh;
       padding: 40px 20px;
     }
@@ -25,12 +25,25 @@
     }
 
     h1 {
-      color: #fff;
+      color: #0277bd;
       text-align: center;
       font-size: 2.5rem;
       margin-bottom: 40px;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
       letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    h1::before {
+      content: '';
+      width: 50px;
+      height: 50px;
+      background: url('./public/certcenter.png') no-repeat center center;
+      background-size: contain;
+      display: inline-block;
     }
 
     .card {
@@ -66,7 +79,7 @@
     }
 
     th {
-      background: linear-gradient(135deg, #a8c0ff 0%, #c9a8ff 100%);
+      background: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%);
       color: #fff;
       text-align: left;
       font-weight: 600;
@@ -86,11 +99,11 @@
     td:first-child {
       width: 30%;
       font-weight: 500;
-      color: #5a67d8;
+      color: #0288d1;
     }
 
     tr:hover td {
-      background: linear-gradient(90deg, rgba(167, 139, 250, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
+      background: linear-gradient(90deg, rgba(79, 195, 247, 0.12) 0%, rgba(41, 182, 246, 0.12) 100%);
     }
 
     tr:last-child td:first-child {
@@ -102,41 +115,41 @@
     }
 
     code {
-      background: linear-gradient(135deg, #e0e7ff 0%, #ede9fe 100%);
-      color: #5b21b6;
+      background: linear-gradient(135deg, #e1f5fe 0%, #b3e5fc 100%);
+      color: #01579b;
       padding: 8px 12px;
       border-radius: 8px;
       font-family: 'Consolas', 'Monaco', monospace;
       font-size: 0.9rem;
       display: inline-block;
       margin: 4px 0;
-      border: 1px solid rgba(139, 92, 246, 0.2);
+      border: 1px solid rgba(3, 169, 244, 0.3);
     }
 
     input[type="text"] {
       width: 100%;
       max-width: 400px;
       padding: 12px 16px;
-      border: 2px solid #c9a8ff;
+      border: 2px solid #81d4fa;
       border-radius: 10px;
       font-size: 1rem;
-      background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
-      color: #5b21b6;
+      background: linear-gradient(135deg, #f1f8fb 0%, #e0f2f7 100%);
+      color: #01579b;
       font-weight: 500;
       transition: all 0.3s ease;
     }
 
     input[type="text"]:focus {
       outline: none;
-      border-color: #8b5cf6;
-      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+      border-color: #3ba0d4;
+      box-shadow: 0 0 0 4px rgba(59, 160, 212, 0.15);
       transform: translateY(-2px);
     }
 
     button {
       margin-top: 8px;
       padding: 10px 20px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #3ba0d4 0%, #0288d1 100%);
       color: white;
       border: none;
       border-radius: 10px;
@@ -144,15 +157,15 @@
       font-weight: 600;
       font-size: 0.9rem;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 4px 15px rgba(59, 160, 212, 0.3);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
     button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+      box-shadow: 0 6px 20px rgba(59, 160, 212, 0.4);
+      background: linear-gradient(135deg, #0288d1 0%, #3ba0d4 100%);
     }
 
     button:active {
@@ -160,13 +173,13 @@
     }
 
     #cleanResult {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-      box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+      background: linear-gradient(135deg, #ff7043 0%, #ff5722 100%);
+      box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
     }
 
     #cleanResult:hover {
-      background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
-      box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+      background: linear-gradient(135deg, #ff5722 0%, #ff7043 100%);
+      box-shadow: 0 6px 20px rgba(255, 87, 34, 0.4);
     }
 
     .resultSpan {
@@ -195,17 +208,17 @@
     }
 
     small {
-      color: #7c3aed;
+      color: #0277bd;
       display: block;
       margin-top: 8px;
       font-style: italic;
     }
 
     .reg-val {
-      color: #c026d3;
+      color: #0277bd;
       font-weight: 600;
       padding: 2px 6px;
-      background: rgba(192, 38, 211, 0.1);
+      background: rgba(59, 160, 212, 0.15);
       border-radius: 4px;
     }
 
