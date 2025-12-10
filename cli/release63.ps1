@@ -35,8 +35,8 @@ function devCarcareNginx {
 function releaseNginxImageDemo {
     backToDefault
     cd D:\Users\AmandaChou\git\itsower\LineCRM.CarCare.Devops\VMSolution\nginx
-    docker build -t 192.168.100.63:5000/carcare-nginx:1.0.2 .
-    docker push 192.168.100.63:5000/carcare-nginx:1.0.2
+    docker build -t 192.168.100.63:5000/carcare-nginx:1.0.5 .
+    docker push 192.168.100.63:5000/carcare-nginx:1.0.5
 
     createAndUse41
     cd D:\Users\AmandaChou\git\itsower\LineCRM.CarCare.Devops\VMSolution\DevDocker\DevNginx\carcare
