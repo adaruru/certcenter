@@ -33,7 +33,11 @@ docker run -d --name certcenter -p 9250:9250 \
 
 本地測試 http://localhost:9250/
 
-![image-20251210162157586](.attach/.README/image-20251210162157586.png)
+![image-20251210162157586](.attach/.README/image-20251210162157586.png) 
+
+成功發行效果
+
+![image-20251210165104466](.attach/.README/image-20251210165104466.png) 
 
 ## 環境需求
 
