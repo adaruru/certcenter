@@ -2,11 +2,29 @@ services:
   certcenter:
     image: certcenter:test
     container_name: certcenter
+    restart: unless-stopped
     ports:
     - "9250:9250"
     environment:
-    - ACME_ACCOUNT=amanda@ruru910.com
-    - ACME_DNS_API=https://auth.acme-dns.io/register
-    # 務必成功執行之後再掛出憑證儲存目錄
-    # volumes:
-    # - C:/Users/AmandaChou/Downloads/its-certcenter/itsower.com.tw:/its-certcenter/*.itsower.com.tw
+      ACME_ACCOUNT: amanda@ruru910.com
+      ACME_DNS_API: https://auth.acme-dns.io/register
+    volumes:
+    - certcenter-data:/certcenter # 持久化儲存憑證和 acme-dns 註冊資訊
+    - acme-data:/root/.acme.sh # 持久化儲存 ACME 帳戶金鑰和配置
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9250/register" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  certcenter-data:
+    name: certcenter-data
+  acme-data:
+    name: acme-data
