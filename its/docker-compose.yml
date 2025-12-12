@@ -1,8 +1,7 @@
 services:
-  certcenter:
+  its-certcenter:
     image: 192.168.100.63:5000/its-certcenter
     container_name: its-certcenter
-    restart: unless-stopped
     ports:
     - "9250:9250"
     environment:
@@ -11,6 +10,7 @@ services:
     volumes:
     - certcenter-data:/certcenter # 持久化儲存憑證和 acme-dns 註冊資訊
     - acme-data:/root/.acme.sh # 持久化儲存 ACME 帳戶金鑰和配置
+    restart: always
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:9250/acmeRegInfo" ]
       interval: 30s
